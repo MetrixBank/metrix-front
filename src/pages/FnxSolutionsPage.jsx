@@ -1,0 +1,2 @@
+// Este arquivo foi removido para evitar conflitos de rota e garantir que a navegação para /fnx-solutions funcione corretamente.
+// O componente FnxSolutionsPage agora é importado diretamente de 'src/pages/fnx-solutions/FnxSolutionsPage.jsx' em AppRoutes.

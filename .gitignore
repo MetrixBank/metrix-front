@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+
+# Build
+dist/
+build/
+
+# Logs & OS
+*.log
+.DS_Store
+Thumbs.db
+
+# Ambiente — nunca commitar segredos
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
+.env.test
+# Templates de exemplo podem ser versionados
+!.env.example
+!**/.env.example
+
+# Editor
+.idea/
+.vscode/*
+!.vscode/extensions.json

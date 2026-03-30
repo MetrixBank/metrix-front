@@ -1,0 +1,1 @@
+// Este arquivo foi removido para evitar conflitos e garantir que o cabeçalho padrão seja usado em toda a aplicação.

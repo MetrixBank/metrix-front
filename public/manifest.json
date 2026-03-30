@@ -1,0 +1,25 @@
+{
+  "name": "MetriX - Gestão de Sucesso",
+  "short_name": "MetriX",
+  "description": "Plataforma inteligente de gestão financeira que une organização, planejamento e soluções práticas em um só lugar. Gerencie suas finanças com MetriX.",
+  "icons": [
+    {
+      "src": "https://horizons-cdn.hostinger.com/0c05ef73-d1d6-4ad5-b2e0-c9f1ef8a8a6c/ca6b5d83c8c3d3cc1297ddae09f135b9.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://horizons-cdn.hostinger.com/0c05ef73-d1d6-4ad5-b2e0-c9f1ef8a8a6c/ca6b5d83c8c3d3cc1297ddae09f135b9.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "theme_color": "#8B5CF6",
+  "background_color": "#030712",
+  "display": "standalone",
+  "scope": "/",
+  "start_url": "/",
+  "orientation": "portrait"
+}
