@@ -18,11 +18,13 @@ const proposalNotificationSound = new Howl({
     preload: true,
 });
 
-export const useSupabaseListeners = (user, onLogout) => {
+export const useSupabaseListeners = (user, onLogout, bypassAuth = false) => {
     const notificationContext = useContext(NotificationContext);
     const assistantContext = useContext(AiAssistantContext);
 
     useEffect(() => {
+        if (bypassAuth) return;
+
         let profileSubscription = null;
         let presenceChannel = null;
 
@@ -78,9 +80,10 @@ export const useSupabaseListeners = (user, onLogout) => {
           if (profileSubscription) supabase.removeChannel(profileSubscription);
           if (presenceChannel) supabase.removeChannel(presenceChannel);
         };
-    }, [user, onLogout]);
+    }, [user, onLogout, bypassAuth]);
 
     useEffect(() => {
+        if (bypassAuth) return;
         if (!user || !notificationContext || !assistantContext) return;
         
         const { addNotification } = notificationContext;
@@ -107,10 +110,11 @@ export const useSupabaseListeners = (user, onLogout) => {
                 supabase.removeChannel(assistantTaskChannel);
              };
         }
-    }, [user, assistantContext, onLogout]);
+    }, [user, assistantContext, onLogout, bypassAuth]);
 
 
     useEffect(() => {
+        if (bypassAuth) return;
         if (!user || !notificationContext) return;
         
         const { addNotification } = notificationContext;
@@ -258,5 +262,5 @@ export const useSupabaseListeners = (user, onLogout) => {
                 supabase.removeChannel(distributorProposalChannel);
             };
         }
-    }, [user, notificationContext, onLogout]);
+    }, [user, notificationContext, onLogout, bypassAuth]);
 };

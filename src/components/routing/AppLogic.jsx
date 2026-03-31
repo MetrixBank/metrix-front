@@ -53,11 +53,11 @@ const GlobalComponents = () => {
 };
 
 const AppLogic = () => {
-  const { user, loading, signOut, session } = useAuth();
+  const { user, loading, signOut, session, bypassAuth } = useAuth();
   const { startTutorial, tutorialCompleted } = useTutorial();
   
   // Hooks must be called at the top level, never inside try/catch blocks
-  useSupabaseListeners(user, signOut);
+  useSupabaseListeners(user, signOut, bypassAuth);
 
   useEffect(() => {
     if (!loading) {
@@ -95,7 +95,7 @@ const AppLogic = () => {
     let mounted = true;
 
     const checkAndStartTutorial = async () => {
-      if (!session || !user) return;
+      if (!session || !user || bypassAuth) return;
 
       try {
         if (user.id && user.role === 'distributor' && !tutorialCompleted) {
@@ -116,7 +116,7 @@ const AppLogic = () => {
     return () => {
       mounted = false;
     };
-  }, [user, loading, startTutorial, checkTutorialEligibility, tutorialCompleted, session]);
+  }, [user, loading, startTutorial, checkTutorialEligibility, tutorialCompleted, session, bypassAuth]);
 
   if (loading) {
     return <LoadingFallback />;
