@@ -7,7 +7,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
 import { 
-  ChevronRight, FilterX, Plus, TrendingUp, Loader2, ChevronLeft
+  ChevronRight, FilterX, Plus, TrendingUp, Loader2, ChevronLeft, CalendarX
 } from 'lucide-react';
 import AddSalesActivityModal from '@/components/AddSalesActivityModal';
 import { supabase } from '@/lib/supabaseClient';
@@ -230,8 +230,8 @@ const AgendaTab = ({ user }) => {
     // --- Render Cards ---
 
     const renderActivityCard = (event) => (
-         <Card className="flex-1 border-l-4 border-l-primary overflow-hidden hover:shadow-md transition-all group">
-            <CardContent className="p-2.5 sm:p-4 flex items-center justify-between gap-2">
+         <Card className="flex-1 rounded-2xl border-l-4 border-l-primary overflow-hidden hover:shadow-md transition-all group">
+            <CardContent className="p-3 sm:p-5 flex items-center justify-between gap-2">
                 <div onClick={() => handleEditActivity(event)} className="flex-1 cursor-pointer min-w-0">
                     <h3 className="font-semibold text-sm sm:text-base truncate pr-1">{event.customer_name}</h3>
                     <div className="flex items-center text-xs text-muted-foreground mt-0.5 sm:mt-1 gap-1 sm:gap-2 flex-wrap">
@@ -254,8 +254,8 @@ const AgendaTab = ({ user }) => {
         const isIncome = entry.type === 'income';
         const netProfitShare = entry.custom_data?.net_profit_share;
         return (
-             <Card className={cn("flex-1 border-l-4 overflow-hidden hover:shadow-md transition-all", isIncome ? "border-l-emerald-500" : "border-l-red-500")}>
-                <CardContent className="p-2.5 sm:p-4 flex items-center justify-between gap-2">
+             <Card className={cn("flex-1 rounded-2xl border-l-4 overflow-hidden hover:shadow-md transition-all", isIncome ? "border-l-emerald-500" : "border-l-red-500")}>
+                <CardContent className="p-3 sm:p-5 flex items-center justify-between gap-2">
                     <div className="min-w-0 flex-1">
                         <h3 className="font-semibold text-sm sm:text-base truncate pr-1">{entry.description}</h3>
                         <div className="flex flex-col mt-0.5 sm:mt-1">
@@ -290,16 +290,18 @@ const AgendaTab = ({ user }) => {
 
     return (
         <div className="flex flex-col h-full bg-background relative overflow-hidden">
-            <div className="bg-gradient-to-br from-[#A78BFA] to-[#7C3AED] dark:from-violet-600 dark:to-purple-800 pt-6 pb-8 px-4 sm:pt-12 sm:pb-12 sm:px-8 rounded-b-[2.5rem] shadow-xl z-10 shrink-0 relative transition-colors duration-500">
-                <div className="max-w-xl mx-auto mb-6 sm:mb-8">
+            <div className="relative overflow-hidden rounded-b-[2.5rem] shadow-2xl shadow-purple-950/40 z-10 shrink-0 transition-colors duration-500">
+                <div className="relative z-10 pt-6 pb-8 px-4 sm:pt-12 sm:pb-12 sm:px-8">
+                <div className="max-w-3xl mx-auto w-full">
+                    <div className="rounded-2xl p-px bg-gradient-to-br from-white/35 via-purple-500/40 to-transparent shadow-[0_20px_60px_rgba(138,43,226,0.15)]">
+                    <div className="font-calendar rounded-[15px] bg-white/[0.06] backdrop-blur-[12px] sm:backdrop-blur-[20px] shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] px-3 pt-4 pb-5 sm:px-5 sm:pt-5 sm:pb-6 space-y-5 sm:space-y-6">
                      <Tabs value={viewMode} onValueChange={setViewMode} className="w-full">
-                        <TabsList className="grid w-full grid-cols-2 bg-white/20 text-white h-10">
-                            <TabsTrigger value="activities" className="data-[state=active]:bg-white data-[state=active]:text-violet-700 font-medium">Atividades</TabsTrigger>
-                            <TabsTrigger value="financial" className="data-[state=active]:bg-white data-[state=active]:text-violet-700 font-medium">Financeiro</TabsTrigger>
+                        <TabsList className="grid w-full grid-cols-2 h-auto p-1 rounded-xl text-white/90 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] bg-white/[0.06] backdrop-blur-sm border border-white/[0.14]">
+                            <TabsTrigger value="activities" className="text-white/70 rounded-lg py-2.5 font-medium transition-all duration-300 ease-out data-[state=active]:bg-white data-[state=active]:text-violet-700 data-[state=active]:font-semibold data-[state=active]:shadow-[0_4px_18px_rgba(0,0,0,0.12)]">Atividades</TabsTrigger>
+                            <TabsTrigger value="financial" className="text-white/70 rounded-lg py-2.5 font-medium transition-all duration-300 ease-out data-[state=active]:bg-white data-[state=active]:text-violet-700 data-[state=active]:font-semibold data-[state=active]:shadow-[0_4px_18px_rgba(0,0,0,0.12)]">Financeiro</TabsTrigger>
                         </TabsList>
                     </Tabs>
-                </div>
-                <div className="relative z-20 w-full max-w-md sm:max-w-5xl mx-auto">
+                <div className="relative z-20 w-full">
                     <DayPicker
                         mode="single"
                         selected={selectedDate}
@@ -310,43 +312,63 @@ const AgendaTab = ({ user }) => {
                         modifiers={modifiers}
                         components={{ IconLeft: () => <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6" />, IconRight: () => <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6" /> }}
                         classNames={{
-                            months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0 w-full",
-                            month: "space-y-4 sm:space-y-6 w-full",
-                            caption: "flex justify-center pt-1 relative items-center text-lg sm:text-2xl font-bold text-white capitalize mb-4 sm:mb-8",
-                            caption_label: "text-lg sm:text-2xl font-bold text-white capitalize",
-                            nav: "space-x-1 sm:space-x-2 flex items-center absolute w-full justify-between top-0 px-2",
-                            nav_button: "h-8 w-8 sm:h-12 sm:w-12 bg-transparent hover:bg-white/20 text-white border border-white/30 rounded-full flex items-center justify-center transition-all opacity-90 hover:opacity-100",
+                            months: "flex flex-col sm:flex-row justify-center space-y-4 sm:space-x-4 sm:space-y-0 w-full",
+                            month: "space-y-4 sm:space-y-6 w-full flex flex-col items-center",
+                            caption: "flex justify-center pt-1 relative items-center w-full text-lg sm:text-2xl font-bold text-white capitalize mb-4 sm:mb-8 tracking-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.35)] z-10",
+                            caption_label: "text-lg sm:text-2xl font-bold text-white capitalize tracking-tight drop-shadow-[0_1px_4px_rgba(0,0,0,0.3)] z-10",
+                            nav: "flex items-center justify-between absolute w-full top-0 px-2 sm:px-4 z-20",
+                            nav_button: "h-10 w-10 sm:h-12 sm:w-12 min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0 text-white rounded-full flex items-center justify-center transition-colors duration-200 bg-black/30 hover:bg-white/10 border border-white/15 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] hover:border-white/25 active:scale-95",
                             nav_button_previous: "",
                             nav_button_next: "",
-                            table: "w-full border-collapse space-y-0 sm:space-y-2",
-                            head_row: "flex w-full justify-between mb-2 sm:mb-4 px-1",
-                            head_cell: "text-white/80 rounded-md w-full font-medium text-xs sm:text-lg text-center uppercase tracking-wider",
-                            row: "flex w-full mt-2 sm:mt-3 justify-between gap-1 sm:gap-3",
-                            cell: "text-center p-0 relative focus-within:relative focus-within:z-20 w-full flex-1",
-                            day: "h-9 w-9 sm:h-16 sm:w-16 mx-auto p-0 font-medium aria-selected:opacity-100 hover:bg-white/20 rounded-full transition-all text-white text-sm sm:text-xl flex items-center justify-center",
-                            day_selected: "bg-white text-purple-700 hover:bg-white hover:text-purple-700 focus:bg-white focus:text-purple-700 font-bold shadow-lg scale-110",
-                            day_today: "bg-white/20 text-white font-bold border-2 border-white/50",
-                            day_outside: "text-white/30 opacity-50 aria-selected:bg-white/10 aria-selected:text-white/50 aria-selected:opacity-30",
-                            day_disabled: "text-white/20 opacity-30",
+                            table: "w-full max-w-md mx-auto border-collapse space-y-0 sm:space-y-2",
+                            head_row: "flex w-full max-w-md mx-auto justify-between mb-2 sm:mb-4 px-0.5",
+                            head_cell: "text-white/75 rounded-md w-full font-normal text-[10px] sm:text-xs text-center uppercase tracking-[0.1em] drop-shadow-[0_1px_2px_rgba(0,0,0,0.35)]",
+                            row: "flex w-full max-w-md mx-auto mt-2 sm:mt-3 justify-between gap-2 sm:gap-3",
+                            cell: "text-center p-0 relative focus-within:relative focus-within:z-20 w-full flex-1 flex justify-center",
+                            day: "h-9 w-9 sm:h-16 sm:w-16 mx-auto p-0 font-semibold aria-selected:opacity-100 hover:bg-white/15 rounded-full transition-all text-white/95 text-sm sm:text-xl flex items-center justify-center drop-shadow-[0_1px_2px_rgba(0,0,0,0.25)]",
+                            day_selected: "bg-white text-purple-950 hover:bg-white hover:text-purple-950 focus:bg-white focus:text-purple-950 font-bold scale-110 ring-2 ring-[rgba(138,43,226,0.45)] shadow-[0_0_24px_rgba(138,43,226,0.35),0_4px_14px_rgba(255,255,255,0.2)]",
+                            day_today: "bg-white/18 text-white font-extrabold border-2 border-white/45 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.08)]",
+                            day_outside: "text-white/42 font-medium opacity-80 aria-selected:bg-white aria-selected:text-purple-950 aria-selected:opacity-100 aria-selected:font-bold",
+                            day_disabled: "text-white/28 opacity-40 font-medium",
                             day_range_middle: "aria-selected:bg-white/20 aria-selected:text-white",
                             day_hidden: "invisible",
                         }}
                     />
                 </div>
+                    </div>
+                    </div>
+                </div>
+                </div>
             </div>
 
             <div className="flex-1 overflow-y-auto custom-scrollbar px-3 pt-6 pb-24 sm:px-6">
-                <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-xl font-bold text-foreground">
+                <div className="max-w-3xl mx-auto w-full">
+                <div className="flex items-center justify-between mb-4 gap-3">
+                    <h2 className="text-2xl font-extrabold tracking-tight text-foreground">
                         {selectedDate ? format(selectedDate, "dd 'de' MMMM", { locale: ptBR }) : format(currentMonth, "MMMM yyyy", { locale: ptBR })}
                     </h2>
-                    {selectedDate && <Button variant="ghost" size="sm" onClick={() => setSelectedDate(undefined)}><FilterX className="w-4 h-4 mr-2"/> Ver Mês</Button>}
+                    {selectedDate && (
+                        <button
+                            type="button"
+                            onClick={() => setSelectedDate(undefined)}
+                            className="inline-flex items-center gap-2 shrink-0 px-3 py-1.5 text-sm bg-muted/30 hover:bg-muted/50 text-muted-foreground rounded-full transition-all"
+                        >
+                            <FilterX className="w-4 h-4" />
+                            Ver Mês
+                        </button>
+                    )}
                 </div>
 
                 <div className="space-y-4">
                      {displayedEvents.length === 0 ? (
-                         <div className="text-center py-10 opacity-50">
-                             <p>Nenhum registro encontrado.</p>
+                         <div className="flex flex-col items-center justify-center py-16 text-center">
+                             <CalendarX className="h-16 w-16 sm:h-20 sm:w-20 text-muted-foreground/30 mb-4" aria-hidden />
+                             <p className="text-base font-medium text-muted-foreground">Nenhum registro para este dia</p>
+                             <p className="text-sm text-muted-foreground/80 mt-1 max-w-sm">
+                                 {viewMode === 'financial'
+                                     ? 'Aproveite para registrar um novo lançamento.'
+                                     : 'Aproveite para adicionar uma nova atividade.'}
+                             </p>
                          </div>
                      ) : (
                          displayedEvents.map((item, idx) => (
@@ -365,19 +387,40 @@ const AgendaTab = ({ user }) => {
                          ))
                      )}
                 </div>
+                </div>
             </div>
 
             <div className="absolute bottom-6 left-0 right-0 flex justify-center z-50 pointer-events-none">
-                 <Button 
-                    size="icon" 
-                    className="h-14 w-14 rounded-full shadow-xl bg-violet-600 hover:bg-violet-700 text-white pointer-events-auto transform transition-transform hover:scale-110 active:scale-95 ring-4 ring-background"
-                    onClick={() => {
-                        setSelectedEvent(null);
-                        setIsEditModalOpen(true);
-                    }}
-                 >
-                    <Plus className="h-8 w-8" />
-                 </Button>
+                <div className="pointer-events-auto relative h-14 w-14 shrink-0 rounded-full shadow-2xl shadow-purple-950/40">
+                    <span
+                        className="absolute inset-0 rounded-full bg-gradient-to-br from-[#1e0a3c] via-[#4c1d95] to-[#0f0528] dark:from-[#0c0a1a] dark:via-violet-950 dark:to-[#0a0518]"
+                        aria-hidden
+                    />
+                    <span
+                        className="absolute inset-0 rounded-full bg-gradient-to-t from-black/40 via-black/5 to-transparent"
+                        aria-hidden
+                    />
+                    <span
+                        className="absolute inset-0 rounded-full bg-[radial-gradient(circle_at_30%_15%,rgba(167,139,250,0.5)_0%,rgba(91,33,182,0.2)_45%,transparent_65%)]"
+                        aria-hidden
+                    />
+                    <span
+                        className="absolute inset-0 rounded-full bg-[radial-gradient(circle_at_100%_100%,rgba(124,58,237,0.35)_0%,transparent_50%)]"
+                        aria-hidden
+                    />
+                    <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="relative h-14 w-14 rounded-full border border-white/[0.24] bg-white/[0.08] text-white backdrop-blur-xl backdrop-saturate-150 shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_0_0_1px_rgba(255,255,255,0.06),0_6px_28px_rgba(76,29,149,0.4),0_0_24px_rgba(196,181,253,0.25)] hover:bg-white/[0.14] hover:text-white hover:border-white/35 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.14),0_0_0_1px_rgba(255,255,255,0.1),0_8px_32px_rgba(76,29,149,0.5),0_0_32px_rgba(196,181,253,0.35)] transition-all hover:scale-110 active:scale-95 ring-4 ring-background"
+                        onClick={() => {
+                            setSelectedEvent(null);
+                            setIsEditModalOpen(true);
+                        }}
+                    >
+                        <Plus className="h-8 w-8 drop-shadow-[0_2px_6px_rgba(0,0,0,0.35)]" strokeWidth={2.25} />
+                    </Button>
+                </div>
             </div>
 
             {isEditModalOpen && (
