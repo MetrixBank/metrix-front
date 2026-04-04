@@ -2,16 +2,42 @@ import React, { createContext, useContext, useEffect, useState, useCallback, use
 import { supabase } from '@/lib/supabaseClient';
 import { useToast } from '@/components/ui/use-toast';
 
+/** Quando true, a app usa um usuário fictício e não exige login (apenas dev). Defina VITE_BYPASS_AUTH=true no .env */
+export const BYPASS_AUTH = import.meta.env.VITE_BYPASS_AUTH === 'true';
+
+const BYPASS_USER_ID = '00000000-0000-4000-8000-000000000001';
+
+const MOCK_BYPASS_USER = {
+  id: BYPASS_USER_ID,
+  email: 'dev@metrix.local',
+  aud: 'authenticated',
+  app_metadata: {},
+  user_metadata: {},
+};
+
+const MOCK_BYPASS_SESSION = {
+  access_token: 'bypass',
+  refresh_token: 'bypass',
+  user: MOCK_BYPASS_USER,
+};
+
+const MOCK_BYPASS_PROFILE = {
+  id: BYPASS_USER_ID,
+  email: 'dev@metrix.local',
+  name: 'Dev (sem login)',
+  role: 'distributor',
+};
+
 // Create the context
 export const AuthContext = createContext(undefined);
 
 // Export the provider
 export const AuthProvider = ({ children }) => {
   const { toast } = useToast();
-  const [user, setUser] = useState(null);
-  const [session, setSession] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [profile, setProfile] = useState(null);
+  const [user, setUser] = useState(BYPASS_AUTH ? MOCK_BYPASS_USER : null);
+  const [session, setSession] = useState(BYPASS_AUTH ? MOCK_BYPASS_SESSION : null);
+  const [loading, setLoading] = useState(!BYPASS_AUTH);
+  const [profile, setProfile] = useState(BYPASS_AUTH ? MOCK_BYPASS_PROFILE : null);
 
   const fetchProfile = useCallback(async (userId) => {
     if (!userId) {
@@ -81,7 +107,7 @@ export const AuthProvider = ({ children }) => {
   }, [fetchProfile, clearLocalAuth]);
 
   useEffect(() => {
-    if (!user?.id) return;
+    if (BYPASS_AUTH || !user?.id) return;
 
     const channel = supabase
         .channel(`profile_changes_${user.id}`)
@@ -106,6 +132,8 @@ export const AuthProvider = ({ children }) => {
   }, [user?.id, fetchProfile]);
 
   useEffect(() => {
+    if (BYPASS_AUTH) return;
+
     let mounted = true;
 
     const getSession = async () => {
@@ -194,6 +222,10 @@ export const AuthProvider = ({ children }) => {
   }, [toast]);
 
   const signOut = useCallback(async () => {
+    if (BYPASS_AUTH) {
+      clearLocalAuth();
+      return { error: null };
+    }
     try {
       const { error } = await supabase.auth.signOut();
       
@@ -231,6 +263,7 @@ export const AuthProvider = ({ children }) => {
     user: profile ? { ...user, ...profile } : user,
     session,
     loading,
+    bypassAuth: BYPASS_AUTH,
     signUp,
     signIn,
     signOut,
