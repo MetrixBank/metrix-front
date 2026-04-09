@@ -24,6 +24,12 @@
     --input: 217.2 32.6% 17.5%;
     --ring: 262.1 83.3% 57.8%;
     --radius: 0.5rem;
+    /* Nocturnal Atelier — top shell (opcional; não altera fontes) */
+    --nocturnal-bg: #0f0b1e;
+    --nocturnal-surface-low: #151025;
+    --nocturnal-tertiary: #a0fff0;
+    /* Tom mais profundo para gradientes (primary → primary-container) */
+    --primary-container: 265 42% 32%;
   }
 }
 
@@ -49,6 +55,111 @@
   .cockpit-bg {
     @apply bg-background;
     background-image: none;
+  }
+
+  /* Agenda — Nocturnal Atelier */
+  .agenda-nocturnal-surface {
+    background-color: var(--nocturnal-surface-low);
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+    box-shadow:
+      0 20px 80px rgba(0, 0, 0, 0.4),
+      inset 1px 1px 0 rgba(174, 167, 193, 0.1);
+  }
+
+  .agenda-timeline-rail {
+    background: linear-gradient(
+      180deg,
+      #c799ff 0%,
+      rgba(199, 153, 255, 0.45) 45%,
+      transparent 100%
+    );
+  }
+
+  /* CTA Agenda — brilho e microinterações (hover / toque) */
+  .agenda-cta-button {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      transform 0.22s cubic-bezier(0.34, 1.45, 0.64, 1),
+      box-shadow 0.38s ease,
+      filter 0.32s ease;
+  }
+
+  .agenda-cta-button::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0;
+    background: linear-gradient(
+      115deg,
+      transparent 0%,
+      transparent 38%,
+      rgba(255, 255, 255, 0.42) 50%,
+      transparent 62%,
+      transparent 100%
+    );
+    transform: translateX(-130%) skewX(-16deg);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .agenda-cta-button:hover {
+      transform: translateY(-2px) scale(1.02);
+      filter: brightness(1.09) saturate(1.06);
+      box-shadow:
+        0 0 44px rgba(199, 153, 255, 0.58),
+        0 0 72px rgba(188, 135, 254, 0.38),
+        0 14px 32px rgba(60, 20, 100, 0.35);
+    }
+
+    .agenda-cta-button:hover::before {
+      opacity: 1;
+      animation: agenda-cta-shine-sweep 0.75s ease-out forwards;
+    }
+  }
+
+  /* Toque: leve brilho + compressão (sem hover) */
+  @media (hover: none) {
+    .agenda-cta-button:active {
+      transform: scale(0.97);
+      filter: brightness(0.96);
+      box-shadow:
+        0 0 24px rgba(199, 153, 255, 0.45),
+        0 4px 16px rgba(0, 0, 0, 0.25);
+    }
+
+    .agenda-cta-button:active::before {
+      opacity: 1;
+      animation: agenda-cta-shine-sweep 0.4s ease-out forwards;
+    }
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .agenda-cta-button:active {
+      transform: translateY(0) scale(0.98);
+      filter: brightness(0.97);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .agenda-cta-button,
+    .agenda-cta-button:hover,
+    .agenda-cta-button:active {
+      transform: none !important;
+      filter: none !important;
+      animation: none !important;
+      transition: none;
+    }
+
+    .agenda-cta-button::before {
+      display: none;
+    }
   }
 
   /* Sales Modal Global Styles for Inputs */
@@ -82,6 +193,15 @@
   0% { transform: translateY(0px); }
   50% { transform: translateY(-10px); }
   100% { transform: translateY(0px); }
+}
+
+@keyframes agenda-cta-shine-sweep {
+  0% {
+    transform: translateX(-130%) skewX(-16deg);
+  }
+  100% {
+    transform: translateX(160%) skewX(-16deg);
+  }
 }
 
 .animate-float {

@@ -2,7 +2,7 @@ import React, { useState, useMemo, Suspense, lazy, useEffect, useCallback } from
 import { motion, AnimatePresence } from 'framer-motion';
 import { BarChartBig, Package, Users as UsersIcon, CalendarDays, Target, Loader2, ListChecks, DollarSign, BrainCircuit } from 'lucide-react';
 import useMediaQuery from '@/hooks/useMediaQuery';
-import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { useTutorial } from '@/contexts/TutorialContext';
 import { useTeamView } from '@/contexts/TeamViewContext';
@@ -14,6 +14,7 @@ import BottomNavigationBar from '@/components/BottomNavigationBar';
 import { Button } from '@/components/ui/button';
 import TutorialStep from '@/components/tutorial/TutorialStep';
 import ErrorBoundary from '@/components/ErrorBoundary';
+import { getCompanyShellTabFromLocation } from '@/lib/mainTopNav';
 
 // Lazy load all tab components
 const TeamDashboard = lazy(() => import('@/components/sub-admin/TeamDashboard'));
@@ -41,31 +42,18 @@ const CompanyManagementPage = ({ logoUrl }) => {
   const { pendingTasksCount, setAssistantOpen, setActivityToEdit } = React.useContext(AiAssistantContext);
   const [isActivityModalOpen, setIsActivityModalOpen] = useState(false);
   const isMobile = useMediaQuery('(max-width: 767px)');
-  const navigate = useNavigate();
   const location = useLocation();
-  const [searchParams] = useSearchParams();
 
-  const getTabFromPath = useCallback((path, search) => {
-    const params = new URLSearchParams(search);
-    if (params.get('tab') === 'intelligence') return 'intelligence';
-
-    if (path.startsWith('/agenda')) return 'agenda';
-    if (path.startsWith('/sales')) return 'crm';
-    if (path.startsWith('/customers')) return 'customers';
-    if (path.startsWith('/stock')) return 'stock';
-    if (path.startsWith('/goals')) return 'goals';
-    if (path.startsWith('/financial')) return 'financial';
-    return 'performance'; 
-  }, []);
-
-  const [activeTab, setActiveTab] = useState(() => getTabFromPath(location.pathname, location.search));
+  const [activeTab, setActiveTab] = useState(() =>
+    getCompanyShellTabFromLocation(location.pathname, location.search),
+  );
 
   useEffect(() => {
-    const newTab = getTabFromPath(location.pathname, location.search);
+    const newTab = getCompanyShellTabFromLocation(location.pathname, location.search);
     if (newTab !== activeTab) {
       setActiveTab(newTab);
     }
-  }, [location.pathname, location.search, activeTab, getTabFromPath]);
+  }, [location.pathname, location.search, activeTab]);
 
   const TABS_CONFIG = useMemo(() => [
     { value: "performance", label: "Início", path: "/dashboard", icon: BarChartBig, component: PerformanceDashboardTab, props: { user } },
@@ -77,14 +65,6 @@ const CompanyManagementPage = ({ logoUrl }) => {
     { value: "stock", label: "Estoque", path: "/stock", icon: Package, component: StockManagementTab, props: { user } },
     { value: "goals", label: "Metas", path: "/goals", icon: Target, component: GoalsTab, props: { user } },
   ], [user]);
-  
-  const TOP_MENU_TABS = useMemo(() => [
-    { value: "performance", label: "Início", path: "/dashboard", icon: BarChartBig },
-    { value: "crm", label: "CRM", path: "/sales", icon: ListChecks },
-    { value: "agenda", label: "Agenda", path: "/agenda", icon: CalendarDays },
-    { value: "customers", label: "Clientes", path: "/customers", icon: UsersIcon },
-    { value: "financial", label: "Financeiro", path: "/financial", icon: DollarSign },
-  ], []);
 
   useEffect(() => {
     if (isTutorialActive && currentStep === 6) {
@@ -99,38 +79,6 @@ const CompanyManagementPage = ({ logoUrl }) => {
     setIsActivityModalOpen(false);
     setActivityToEdit(null);
   }, [setActivityToEdit]);
-
-  const handleTabClick = useCallback((tab) => {
-    if (tab.value === 'stock') {
-      navigate('/stock');
-    } else {
-      navigate(tab.path); 
-    }
-    
-    if (isTutorialActive) {
-        const stepMap = { 
-          'performance': 1, 
-          'crm': 2, 
-          'agenda': 3, 
-          'stock': 6,
-          'goals': 4, 
-        };
-        if (currentStep === stepMap[tab.value]) {
-          setTimeout(() => nextStep(), 300);
-        }
-    }
-  }, [navigate, isTutorialActive, currentStep, nextStep]);
-
-  const getTutorialStepConfig = useCallback((tabValue) => {
-    const steps = {
-      'performance': { step: 1, content: "Primeiro, vamos para 'Desempenho' para analisar seus resultados com gráficos e indicadores." },
-      'crm': { step: 2, content: "No 'CRM', você registra e acompanha suas negociações e funil de vendas." }, 
-      'agenda': { step: 3, content: "Organize seus compromissos e atividades na 'Agenda'." },
-      'stock': { step: 6, content: "Em 'Estoque', gerencie seus produtos e quantidades." }, 
-      'goals': { step: 4, content: "Acompanhe suas 'Metas' e celebre suas conquistas." },
-    };
-    return steps[tabValue] || { step: -1, content: '' };
-  }, []);
 
   const assistantIconUrl = "https://horizons-cdn.hostinger.com/0c05ef73-d1d6-4ad5-b2e0-c9f1ef8a8a6c/2da79d9a13d587bb8b908cfd2f0c3273.png";
 
@@ -153,38 +101,14 @@ const CompanyManagementPage = ({ logoUrl }) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className={`min-h-screen flex flex-col cockpit-bg text-foreground`}
+        className="min-h-screen flex flex-col bg-[color:var(--nocturnal-bg)] text-foreground"
       >
         <DashboardHeader /> 
 
         <div className={`flex-1 p-3 sm:p-4 lg:p-8 ${isMobile ? 'pb-24' : 'pb-4'}`}>
           <div className="max-w-7xl mx-auto w-full">
-            <div className="w-full mt-6">
-              {!isMobile && (
-                <div className="grid grid-cols-5 gap-2 w-full p-0 mb-6 relative">
-                  {TOP_MENU_TABS.map((tab) => {
-                    const tutorialConfig = getTutorialStepConfig(tab.value);
-                    const isActive = activeTab === tab.value;
-                    return (
-                    <TutorialStep
-                      key={tab.value}
-                      step={tutorialConfig.step}
-                      content={tutorialConfig.content}
-                      isActive={isTutorialActive && currentStep === tutorialConfig.step}
-                    >
-                      <button
-                        onClick={() => handleTabClick(tab)}
-                        className={`w-full px-4 py-3 text-sm rounded-md border border-transparent hover:bg-muted/50 flex items-center justify-center transition-all duration-200 group relative z-10 ${isActive ? 'text-primary font-semibold bg-primary/5 shadow-sm' : 'text-muted-foreground'}`}
-                      >
-                        <tab.icon className="w-4 h-4 mr-2 transition-transform duration-300 group-hover:scale-110" /> {tab.label}
-                      </button>
-                    </TutorialStep>
-                    )
-                  })}
-                </div>
-              )}
-
-              <div className={isMobile ? "mt-0" : "mt-4"}>
+            <div className="w-full mt-2 sm:mt-4">
+              <div className={isMobile ? "mt-0" : "mt-2"}>
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={activeTab}
