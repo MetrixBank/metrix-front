@@ -18,6 +18,7 @@ module.exports = {
 		extend: {
 			fontFamily: {
 				calendar: ['Manrope', 'Inter', 'system-ui', 'sans-serif'],
+				plusJakarta: ['"Plus Jakarta Sans"', 'Inter', 'system-ui', 'sans-serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',
