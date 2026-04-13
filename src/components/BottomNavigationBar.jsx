@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 import { NavLink } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
-import { Home, Calendar, Users, DollarSign, ListChecks } from 'lucide-react';
+import { Home, Calendar, Users, Landmark, ListChecks } from 'lucide-react';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
 import { roles } from '@/lib/constants';
 
@@ -13,7 +13,7 @@ const navItems = [
   { path: "/sales", icon: ListChecks, label: "CRM", roles: [roles.DISTRIBUTOR, roles.SUB_ADMIN] },
   { path: "/agenda", icon: Calendar, label: "Agenda", roles: [roles.DISTRIBUTOR, roles.SUB_ADMIN] },
   { path: "/customers", icon: Users, label: "Clientes", roles: [roles.DISTRIBUTOR, roles.SUB_ADMIN] },
-  { path: "/financial", icon: DollarSign, label: "Financeiro", roles: [roles.DISTRIBUTOR, roles.SUB_ADMIN, roles.ADMIN, roles.MASTER_ADMIN] },
+  { path: "/fnx-solutions", icon: Landmark, label: "MetriX Bank", roles: [roles.DISTRIBUTOR, roles.SUB_ADMIN, roles.ADMIN, roles.MASTER_ADMIN] },
 ];
 
 const BottomNavigationBar = memo(() => {

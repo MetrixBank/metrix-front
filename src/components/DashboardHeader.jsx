@@ -73,7 +73,7 @@ const adminNavItems = [
   { path: '/admin/support', icon: LifeBuoy, label: 'Suporte', roles: [roles.ADMIN, roles.MASTER_ADMIN] },
 ];
 
-const mobileBottomBarItems = ['/dashboard', '/sales', '/agenda', '/customers', '/financial'];
+const mobileBottomBarItems = ['/dashboard', '/sales', '/agenda', '/customers', '/fnx-solutions'];
 
 function roleLabel(role) {
   if (role === roles.SUB_ADMIN) return 'Sub-administrador';

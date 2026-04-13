@@ -3,7 +3,7 @@ import {
   ListChecks,
   CalendarDays,
   Users as UsersIcon,
-  DollarSign,
+  Landmark,
 } from 'lucide-react';
 
 /** Rotas principais do shell (cinco itens do header desktop). */
@@ -12,7 +12,7 @@ export const MAIN_TOP_NAV_TABS = [
   { value: 'crm', label: 'CRM', path: '/sales', icon: ListChecks },
   { value: 'agenda', label: 'Agenda', path: '/agenda', icon: CalendarDays },
   { value: 'customers', label: 'Clientes', path: '/customers', icon: UsersIcon },
-  { value: 'financial', label: 'Financeiro', path: '/financial', icon: DollarSign },
+  { value: 'financial', label: 'MetriX Bank', path: '/fnx-solutions', icon: Landmark },
 ];
 
 const MAIN_KEYS = new Set(MAIN_TOP_NAV_TABS.map((t) => t.value));
@@ -30,7 +30,7 @@ export function getCompanyShellTabFromLocation(pathname, search) {
   if (pathname.startsWith('/customers')) return 'customers';
   if (pathname.startsWith('/stock')) return 'stock';
   if (pathname.startsWith('/goals')) return 'goals';
-  if (pathname.startsWith('/financial')) return 'financial';
+  if (pathname.startsWith('/fnx-solutions')) return 'financial';
   return 'performance';
 }
 
@@ -38,6 +38,7 @@ export function getCompanyShellTabFromLocation(pathname, search) {
  * Qual dos cinco itens do header deve mostrar estado activo (gradiente + Spark), ou null.
  */
 export function getMainTopNavHighlightKey(pathname, search) {
+  if (pathname.startsWith('/fnx-solutions')) return 'financial';
   const shell = getCompanyShellTabFromLocation(pathname, search);
   if (MAIN_KEYS.has(shell)) return shell;
   return null;

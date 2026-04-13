@@ -72,7 +72,10 @@ const AppRoutes = () => {
           <Route path="/management" element={<ProtectedRoute allowedRoles={['distributor', 'sub-admin']}><CompanyManagementPage logoUrl={LOGO_URL} /></ProtectedRoute>} />
           
           <Route path="/team" element={<ProtectedRoute allowedRoles={['sub-admin']}><TeamDashboard user={user} logoUrl={LOGO_URL} /></ProtectedRoute>} />
-          <Route path="/financial" element={<ProtectedRoute allowedRoles={['distributor', 'sub-admin', 'admin', 'master-admin']}><CompanyManagementPage logoUrl={LOGO_URL} /></ProtectedRoute>} />
+          <Route
+            path="/financial"
+            element={<Navigate to="/fnx-solutions" replace />}
+          />
           <Route path="/fnx-solutions" element={<ProtectedRoute allowedRoles={['distributor', 'sub-admin']}><FnxSolutionsPage logoUrl={LOGO_URL} /></ProtectedRoute>} />
           <Route path="/mentorship" element={<ProtectedRoute allowedRoles={['distributor', 'sub-admin']}><MentorshipPage logoUrl={LOGO_URL} /></ProtectedRoute>} />
           <Route path="/support" element={<ProtectedRoute allowedRoles={['distributor', 'sub-admin']}><SupportPage logoUrl={LOGO_URL} /></ProtectedRoute>} />

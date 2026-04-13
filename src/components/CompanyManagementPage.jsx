@@ -1,6 +1,6 @@
 import React, { useState, useMemo, Suspense, lazy, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BarChartBig, Package, Users as UsersIcon, CalendarDays, Target, Loader2, ListChecks, DollarSign, BrainCircuit } from 'lucide-react';
+import { BarChartBig, Package, Users as UsersIcon, CalendarDays, Target, Loader2, ListChecks, BrainCircuit } from 'lucide-react';
 import useMediaQuery from '@/hooks/useMediaQuery';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/SupabaseAuthContext';
@@ -26,8 +26,6 @@ const CustomersTab = lazy(() => import('@/components/management/CustomersTab'));
 const StockManagementTab = lazy(() => import('@/components/management/StockManagementTab'));
 const AddSalesActivityModal = lazy(() => import('@/components/AddSalesActivityModal'));
 const DataIntelligenceSection = lazy(() => import('@/components/management/DataIntelligenceSection'));
-const FinancialDashboard = lazy(() => import('@/pages/fnx-solutions/FinancialDashboard'));
-
 const LoadingFallback = () => (
   <div className="flex justify-center items-center h-96">
     <Loader2 className="w-8 h-8 animate-spin text-primary" />
@@ -61,7 +59,6 @@ const CompanyManagementPage = ({ logoUrl }) => {
     { value: "crm", label: "CRM", path: "/sales", icon: ListChecks, component: ActivitiesTab, props: { user } },
     { value: "agenda", label: "Agenda", path: "/agenda", icon: CalendarDays, component: AgendaTab, props: { user } },
     { value: "customers", label: "Clientes", path: "/customers", icon: UsersIcon, component: CustomersTab, props: { user } },
-    { value: "financial", label: "Financeiro", path: "/financial", icon: DollarSign, component: FinancialDashboard, props: { user } },
     { value: "stock", label: "Estoque", path: "/stock", icon: Package, component: StockManagementTab, props: { user } },
     { value: "goals", label: "Metas", path: "/goals", icon: Target, component: GoalsTab, props: { user } },
   ], [user]);

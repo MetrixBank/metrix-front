@@ -1,19 +1,21 @@
 import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+/** Chave anon clássica ou publishable (Supabase novo); qualquer uma serve no `createClient`. */
+const supabaseKey =
+	import.meta.env.VITE_SUPABASE_ANON_KEY ||
+	import.meta.env.VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY;
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error(
-    'Defina VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY no arquivo .env (veja .env.example).'
-  );
-}
+/** Evita `throw` no carregamento do módulo (tela branca no dev sem .env). */
+export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseKey);
 
-const customSupabaseClient = createClient(supabaseUrl, supabaseAnonKey);
+const customSupabaseClient = isSupabaseConfigured
+	? createClient(supabaseUrl, supabaseKey)
+	: null;
 
 export default customSupabaseClient;
 
-export { 
-    customSupabaseClient,
-    customSupabaseClient as supabase,
+export {
+	customSupabaseClient,
+	customSupabaseClient as supabase,
 };
