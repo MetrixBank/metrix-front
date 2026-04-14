@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Github, Twitter, Linkedin, Instagram } from 'lucide-react';
+import { Twitter, Linkedin, Instagram } from 'lucide-react';
 
 const Footer = ({ logoUrl }) => {
   const currentYear = new Date().getFullYear();
@@ -12,7 +12,7 @@ const Footer = ({ logoUrl }) => {
           <div className="md:col-span-1 space-y-4">
             <Link to="/" className="flex items-center gap-2 group">
               <div className="relative w-8 h-8">
-                  <img src={logoUrl} alt="Logo MetriX" className="w-full h-full object-contain opacity-90 group-hover:opacity-100 transition-opacity" />
+                <img src={logoUrl} alt="Logo MetriX" className="w-full h-full object-contain opacity-90 group-hover:opacity-100 transition-opacity" />
               </div>
               <span className="font-bold text-xl text-white tracking-tight">MetriX</span>
             </Link>
@@ -20,7 +20,7 @@ const Footer = ({ logoUrl }) => {
               A plataforma de gestão definitiva para líderes que não aceitam menos que a excelência.
             </p>
           </div>
-          
+
           <div>
             <h4 className="font-semibold text-white mb-6">Produto</h4>
             <ul className="space-y-3">
