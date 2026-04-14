@@ -30,6 +30,9 @@
     --nocturnal-tertiary: #a0fff0;
     /* Tom mais profundo para gradientes (primary → primary-container) */
     --primary-container: 265 42% 32%;
+    /* Teal accent — h1 "Domine o Mercado." e botão CTA */
+    --teal: 172 82% 47%;
+    --teal-rgb: 17, 222, 180;
   }
 }
 
@@ -39,7 +42,7 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', 'Manrope', sans-serif;
   }
 }
 
